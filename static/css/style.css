@@ -1,0 +1,41 @@
+h4.manga-title{
+    padding-right: 30px;
+    padding-left: 30px;
+}
+
+th {
+  background-color: #1A5276;
+  color: white;
+  text-align: center;
+}
+.pd{
+    text-align:center;
+}
+.card-img-top{
+
+}
+
+.card-img-bottom{
+    max-width: 100%;
+    height: auto;
+}
+
+.name_desc{
+    text-align: center;
+}
+
+.pagination {text-align: center;}
+
+.form-control-borderless {
+    border: none;
+}
+
+.form-control-borderless:hover, .form-control-borderless:active, .form-control-borderless:focus {
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+#mydatatable td{
+  padding: 10px;
+  text-align: center;
+}

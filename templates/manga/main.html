@@ -1,0 +1,19 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<nav class="navbar navbar-light bg-light justify-content-between">
+    <form class="form-inline" action="{% url 'new_search' %}" method="post">
+        {% csrf_token %}
+        <input class="form-control mr-sm-2" type="search" name="search" placeholder="search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="action">Search</button>
+    </form>
+</nav>
+
+<div class="container">
+    <br>
+    {% block search %}
+
+
+    {% endblock search %}
+</div>
+{% endblock %}

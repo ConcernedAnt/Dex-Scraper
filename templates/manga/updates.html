@@ -1,0 +1,25 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<form method="GET">
+    <button class="btn btn-secondary" name="mybtn" value="Update">Look For Updates</button>
+</form>
+{% if mangas %}
+    <div class="row pt-2">
+        {% for manga in mangas %}
+        <div class="col-sm-3 py-2">
+            <div class="card h-100 border border-dark">
+                <a href="{% url 'manga-details' manga.name %}">
+                    <img class="card-img-top" src="{{manga.img_url}}">
+                    <div class="card-body">
+                        <h5 class="card-title pt-1 mx-auto">{{manga.name}}</h5>
+                    </div>
+                 </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <h2>There Are No Updates</h2>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'index.html' %}
+{% block content %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-light">
+
+    <form class="navbar-nav mr-auto" method="GET">
+        <button class="btn btn-secondary" name="collbtn" value="Update">Sync Collection</button>
+    </form>
+    <div class="navbar-nav">
+        <form class="form-inline" action="{% url 'collection' %}" method="GET">
+            <input class="form-control mr-sm-2" type="search" name="searchcoll" placeholder="Enter the manga's name.">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="action">Search</button>
+        </form>
+    </div>
+</nav>
+{% if mangas %}
+    <div class="row pt-2">
+        {% for manga in items %}
+        <div class="col-md-3 py-2">
+            <div class="h-100 border border-dark">
+                <a href="{% url 'manga-details' manga.name %}">
+                    <img class="card-img-top" src="{{manga.img_url}}">
+                </a>
+                <div>
+                    <a href="{% url 'manga-details' manga.name %}">
+                        <h5 class="card-body align-items-center">{{manga.name}}</h5>
+                     </a>
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+        {% include 'pagination.html' %}
+    </div>
+{% else %}
+    {% if not search %}
+        <h2>Your Collection Is Empty</h2>
+    {% else %}
+        <h2>Your Search Returned No Results</h2>
+    {% endif %}
+{% endif %}
+{% endblock %}

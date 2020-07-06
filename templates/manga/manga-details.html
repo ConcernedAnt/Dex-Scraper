@@ -1,0 +1,52 @@
+{% extends 'index.html' %}
+{%block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="card bg-dark h-100">
+                <a href="{{manga.manga_url}}" target="_blank">
+                    <div class="card-header">
+                        <h5 class="name_desc"> {{manga.name}} </h5>
+                    </div>
+                </a>
+                <img class="card-img-bottom" src="{{manga.img_url}}">
+            </div>
+        </div>
+        <div class="col-md-7">
+            <form action="{% url 'all_unread' %}" method="POST">
+                {% csrf_token %}
+                <button class="btn btn-secondary" name="allunread" value="{{manga.name}}">Find All Unread</button>
+            </form>
+            <table id="mydatatable" class="table table-striped table-bordered table-sm" cellspacing="0"
+            width="100%">
+                <thead>
+                    <tr>
+                        <th class="th-sm">Chapter</th>
+                        <th class="th-sm">Date Published</th>
+                        <th class="th-sm">Read</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for chapter in chapters %}
+                    <tr>
+                        <td><a target="_blank" class="ready_class" data-id="{{ chapter.chap_id }}" href="{{chapter.chapter_url}}">
+                            {{ chapter.name }}
+                        </a></td>
+
+
+                        <td class="pd">{{chapter.publish_date|date:'Y-m-d H:i:s'}}</td>
+                        <td>
+                          <input type="checkbox" class="ready_class" data-id="{{ chapter.chap_id }}"
+                                 id = "{{chapter.chap_id}}" {% if chapter.read_status %} checked{% endif %}>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

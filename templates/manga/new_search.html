@@ -1,0 +1,26 @@
+{% extends 'manga/main.html' %}
+
+{% block search %}
+    <div class="row pt-2">
+        {% for manga, in_coll in mangas %}
+        <div class="col-md-3 py-2">
+            <div class="card h-100 border border-dark">
+                <a href="{{manga.manga_url}}"> <img class="card-img-top" src="{{manga.img_url}}"></a>
+                <div class="card-body">
+                   <a href="{{manga.manga_url}}"> <h5 class="card-title pt-1 mx-auto">{{manga.name}}</h5></a>
+
+                    <div id="{{manga.manga_id}}" name="MyDIV">
+                    {% if not in_coll %}
+                        <button data-id="{{ manga.manga_id }}" class="btn btn-secondary"
+                                name="addcoll" value="{{manga.name}}">Add To Collection
+                        </button>
+                    {% else %}
+                        <button type="button" class="btn btn-secondary" disabled>Already In Collection</button>
+                    {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}
