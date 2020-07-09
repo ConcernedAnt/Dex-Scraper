@@ -12,7 +12,7 @@ th {
     text-align:center;
 }
 .card-img-top{
-
+    height: 300px;
 }
 
 .card-img-bottom{
@@ -38,4 +38,10 @@ th {
 #mydatatable td{
   padding: 10px;
   text-align: center;
+}
+
+.card-body{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

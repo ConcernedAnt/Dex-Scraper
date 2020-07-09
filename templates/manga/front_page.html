@@ -1,13 +1,10 @@
 {% extends 'index.html' %}
-
 {% block content %}
-<form method="GET">
-    <button class="btn btn-secondary" name="mybtn" value="Update">Look For Updates</button>
-</form>
-{% if mangas %}
-    <div class="row pt-2">
-        {% for manga in mangas %}
-        <div class="col-sm-3 py-2">
+
+<h3>Recently Read</h3>
+<div class="owl-carousel owl-theme">
+    {% for manga in mangas %}
+        <div class="item">
             <div class="card h-100 border border-dark">
                 <a href="{% url 'manga-details' manga.name %}">
                     <img class="card-img-top" src="{{manga.image_file.url}}">
@@ -15,9 +12,10 @@
                  </a>
             </div>
         </div>
-        {% endfor %}
-    </div>
-{% else %}
-    <h2>There Are No Updates</h2>
-{% endif %}
+    {% endfor %}
+</div>
+
+<br />
+<h3>Popular Manga</h3>
+
 {% endblock %}

@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
 
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
 </head>
 {%csrf_token %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -31,6 +32,9 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'updates' %}">Updates</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'search' %}">Search</a>
             </li>
         </ul>
         <div class="navbar-nav">
@@ -64,12 +68,13 @@
         crossorigin="anonymous"></script>
 <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
-<script src="https://cdn.datatables.net/plug-ins/1.10.21/sorting/custom-data-source/dom-checkbox.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
-<script src="https://cdn.datatables.net/plug-ins/1.10.21/sorting/datetime-moment.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.21/sorting/custom-data-source/dom-checkbox.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.21/sorting/datetime-moment.js"></script>
 
+<script src="{% static 'js/owl.carousel.min.js' %}"></script>
 <script src="{% static 'js/table.js' %}"></script>
 <script src="{% static 'js/ajax_functions.js' %}"></script>
-
+<script src="{% static 'js/carousel.js' %}"></script>
 </body>
 </html>

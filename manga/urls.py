@@ -11,6 +11,7 @@ urlpatterns = [
     path('collection/<str:name>', views.manga_details, name="manga-details"),
     path('update_read', views.update_read, name="update_read"),
     path('all_unread', views.collect_all_chapters, name="all_unread"),
+    path('search', views.search, name="search"),
     path('new_search', views.new_search, name="new_search"),
     path('add_to_coll', views.add_to_coll, name="add_to_coll"),
 ]

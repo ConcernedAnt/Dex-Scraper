@@ -19,7 +19,7 @@
         <div class="col-md-3 py-2">
             <div class="h-100 border border-dark">
                 <a href="{% url 'manga-details' manga.name %}">
-                    <img class="card-img-top" src="{{manga.img_url}}">
+                    <img class="card-img-top" src="{{manga.image_file.url}}">
                 </a>
                 <div>
                     <a href="{% url 'manga-details' manga.name %}">
