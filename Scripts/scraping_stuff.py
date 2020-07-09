@@ -1,11 +1,12 @@
-from manga.models import Manga, Chapters, Search
+from manga.models import Manga, Chapters
+from django.utils import timezone
 import requests
 import re
 from datetime import datetime
 from bs4 import BeautifulSoup
 import logging
-import time
-import concurrent.futures
+import multiprocessing
+
 logger = logging.getLogger(__name__)
 MAX_THREADS = 30
 
@@ -67,7 +68,6 @@ class Scraper:
         resp = self.session.get(image_link)
         image_soup = BeautifulSoup(resp.text, "html.parser")
         image_tag = image_soup.find('img', {'class': 'rounded'})
-        logger.error(image_tag)
         return image_tag.get("src")
 
     # Mark manga as read
@@ -181,6 +181,7 @@ class Scraper:
                     date = manga.find('div', {"class": self.date_regex})
                     cleaned_date = date.get("title")[:-4]
                     publish_date = datetime.strptime(cleaned_date, '%Y-%m-%d %H:%M:%S')
+                    publish_date = timezone.make_aware(publish_date)
 
                     # Store info in DB
                     self.set_class(title, manga_href)
@@ -226,6 +227,7 @@ class Scraper:
                 date = manga.find('div', {"class": self.date_regex})
                 cleaned_date = date.get("title")[:-4]
                 publish_date = datetime.strptime(cleaned_date, '%Y-%m-%d %H:%M:%S')
+                publish_date = timezone.make_aware(publish_date)
 
                 if not Chapters.objects.filter(chap_id=chap_id, manga__reader=self.user).exists():
                     manga_obj = manga_to_scrape
@@ -233,8 +235,8 @@ class Scraper:
                                            chap_id=chap_id, publish_date=publish_date)
                     new_chapter.save()
 
-    # Collects information on the manga and saves it to the search table
-    def collect_search_data(self, manga):
+    # Collects information on the manga from search page
+    def collect_data(self, manga):
         link_class = manga.find(class_="rounded large_logo mr-2").a.get("href")
         manga_href = "https://mangadex.org/" + link_class
         title = manga.find(class_="ml-1 manga_title text-truncate").string
@@ -243,13 +245,15 @@ class Scraper:
         digit_list = [int(s) for s in re.findall(r'\b\d+\b', manga_href)]
         manga_id = digit_list[0]
 
-        new_search = Search(reader=self.user, name=title, img_url=img_src, manga_url=manga_href,
-                            manga_id=manga_id)
+        new_search = Manga(reader=self.user, name=title, img_url=img_src, manga_url=manga_href,
+                           manga_id=manga_id, type=2)
         new_search.save()
 
     def scrape_search_page(self, mangas):
+        # with multiprocessing.Pool() as p:
+        #     p.map(self.collect_data, mangas)
         for manga in mangas:
-            self.collect_search_data(manga)
+            self.collect_data(manga)
 
     def search(self, search_string):
         url = f"https://mangadex.org/search?title={search_string}"
@@ -267,3 +271,29 @@ class Scraper:
             mangas = soup.find_all(class_="manga-entry col-lg-6 border-bottom pl-0 my-1")
 
             self.scrape_search_page(mangas)
+
+    # def featured(self):
+    #     url = "https://mangadex.org/featured"
+    #     response = self.session.get(url)
+    #     soup = BeautifulSoup(response.text, "html.parser")
+    #     mangas = soup.find_all(class_="manga-entry col-lg-6 border-bottom pl-0 my-1")
+    #
+    #     for manga in mangas:
+    #         self.collect_data(manga)
+    #
+    #         manga_href, title, img_src, manga_id = self.collect_data(manga)
+
+    # Scrape the main page of mangadex to get the most followed
+    def most_followed(self):
+        url = "https://mangadex.org"
+        response = self.session.get(url)
+        soup = BeautifulSoup(response.text, "html.parser")
+        popular_tab = soup.find(id="top_follows")
+
+        mangas = popular_tab.find_all(class_="list-group-item px-2 py-1")
+        for manga in mangas:
+            link_class = manga.find(class_="hover tiny_logo rounded float-left mr-2").a.get("href")
+            manga_href = "https://mangadex.org/" + link_class
+
+            title = manga.find(class_="manga_title text-truncate ").string
+            self.set_class(title, manga_href)

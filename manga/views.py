@@ -80,7 +80,7 @@ def updates(request):
 def manga_details(request, name):
     user = request.user.profile
     try:
-        manga = Manga.objects.get(reader=user, pk=name)
+        manga = Manga.objects.get(reader=user, name=name)
     except Manga.DoesNotExist:
         raise Http404('Manga does not exist')
 
@@ -145,10 +145,10 @@ def collect_all_chapters(request):
     if request.method == "POST":
         if request.POST.get('allunread'):
             my_scraper = Scraper(user)
-            manga = Manga.objects.get(pk=request.POST.get('allunread'))
+            manga = Manga.objects.get(name=request.POST.get('allunread'))
             my_scraper.all_chapters(manga)
 
-    manga = Manga.objects.get(reader=user, pk=request.POST.get('allunread'))
+    manga = Manga.objects.get(reader=user, name=request.POST.get('allunread'))
     chapters = manga.chapters_set.all()
 
     context = {'manga': manga, 'chapters': chapters}
