@@ -14,4 +14,5 @@ urlpatterns = [
     path('search', views.search, name="search"),
     path('new_search', views.new_search, name="new_search"),
     path('add_to_coll', views.add_to_coll, name="add_to_coll"),
+    path('remove_from_collection', views.remove_from_collection, name="remove_from_collection")
 ]

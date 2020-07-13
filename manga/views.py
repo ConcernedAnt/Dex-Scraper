@@ -172,3 +172,18 @@ def add_to_coll(request):
 
     added_dict = {'added': added}
     return HttpResponse(json.dumps(added_dict), content_type='application/json')
+
+
+# Remove the selected manga from the collection
+def remove_from_collection(request):
+    user = request.user.profile
+    if request.method == "POST":
+        to_delete = json.loads(request.POST['to_delete'])
+        my_scraper = Scraper(user)
+
+        for delete_id in to_delete:
+            manga_to_delete = Manga.objects.get(reader=user, manga_id=delete_id)
+            my_scraper.unfollow(manga_to_delete)
+            manga_to_delete.delete()
+
+    return HttpResponse('')

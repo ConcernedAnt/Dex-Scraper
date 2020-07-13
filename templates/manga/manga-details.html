@@ -30,14 +30,12 @@
                 <tbody>
                     {% for chapter in chapters %}
                     <tr>
-                        <td><a target="_blank" class="ready_class" data-id="{{ chapter.chap_id }}" href="{{chapter.chapter_url}}">
+                        <td><a target="_blank" class="read_class" data-id="{{ chapter.chap_id }}" href="{{chapter.chapter_url}}">
                             {{ chapter.name }}
                         </a></td>
-
-
                         <td class="pd">{{chapter.publish_date|date:'Y-m-d H:i:s'}}</td>
                         <td>
-                          <input type="checkbox" class="ready_class" data-id="{{ chapter.chap_id }}"
+                          <input type="checkbox" class="read_class" data-id="{{ chapter.chap_id }}"
                                  id = "{{chapter.chap_id}}" {% if chapter.read_status %} checked{% endif %}>
                         </td>
                     </tr>
@@ -47,6 +45,4 @@
         </div>
     </div>
 </div>
-
-
 {% endblock %}

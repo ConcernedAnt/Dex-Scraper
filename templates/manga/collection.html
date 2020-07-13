@@ -2,10 +2,13 @@
 {% block content %}
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-light">
-
-    <form class="navbar-nav mr-auto" method="GET">
-        <button class="btn btn-secondary" name="collbtn" value="Update">Sync Collection</button>
-    </form>
+    <div class="navbar-nav mr-auto ">
+         <form method="GET">
+            <button class="btn btn-secondary" name="collbtn" value="Update">Sync Collection</button>
+        </form>
+        <button class="btn btn-secondary" name="editbtn" value="Edit">Edit</button>
+        <button class="btn btn-secondary" name="deletebtn" value="Delete" hidden>Delete</button>
+    </div>
     <div class="navbar-nav">
         <form class="form-inline" action="{% url 'collection' %}" method="GET">
             <input class="form-control mr-sm-2" type="search" name="searchcoll" placeholder="Enter the manga's name.">
@@ -15,14 +18,16 @@
 </nav>
 {% if mangas %}
     <div class="row pt-2">
+        {% csrf_token %}
         {% for manga in items %}
         <div class="col-md-3 py-2">
-            <div class="h-100 border border-dark">
-                <a href="{% url 'manga-details' manga.name %}">
-                    <img class="card-img-top" src="{{manga.image_file.url}}">
+            <div class="h-100 collection">
+                <input type="checkbox" value="{{manga.manga_id}}" class="btn_chk" hidden>
+                <a href="{% url 'manga-details' manga.name %}" class="details-link">
+                    <img class="card-img-top " src="{{manga.image_file.url}}">
                 </a>
                 <div>
-                    <a href="{% url 'manga-details' manga.name %}">
+                    <a href="{% url 'manga-details' manga.name %}" class="details-link">
                         <h5 class="card-body align-items-center">{{manga.name}}</h5>
                      </a>
                 </div>
