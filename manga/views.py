@@ -62,6 +62,7 @@ def index(request):
 @login_required(login_url='login')
 def updates(request):
     user = request.user.profile
+
     if request.GET.get('mybtn'):
         my_scraper = Scraper(user)
         my_scraper.scrape_following()
@@ -80,7 +81,7 @@ def updates(request):
 def manga_details(request, name):
     user = request.user.profile
     try:
-        manga = Manga.objects.get(reader=user, name=name)
+        manga = Manga.objects.get(reader=user, name=name, type=1)
     except Manga.DoesNotExist:
         raise Http404('Manga does not exist')
 

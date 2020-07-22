@@ -14,10 +14,11 @@
             </div>
         </div>
         <div class="col-md-7">
-            <form action="{% url 'all_unread' %}" method="POST">
+            <form action="{% url 'all_unread' %}" method="POST" style="display:inline-block">
                 {% csrf_token %}
                 <button class="btn btn-secondary" name="allunread" value="{{manga.name}}">Find All Unread</button>
             </form>
+            <button class="btn btn-secondary" name="checkAll" id="checkAll" style="display:inline-block">Mark All Read</button>
             <table id="mydatatable" class="table table-striped table-bordered table-sm" cellspacing="0"
             width="100%">
                 <thead>

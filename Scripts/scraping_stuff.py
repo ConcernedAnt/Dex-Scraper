@@ -2,7 +2,7 @@ from manga.models import Manga, Chapters
 from django.utils import timezone
 import requests
 import re
-from datetime import datetime
+import datetime
 from bs4 import BeautifulSoup
 import logging
 import multiprocessing
@@ -94,7 +94,12 @@ class Scraper:
 
     # Write the Chapter to the DB
     def set_class(self, title, manga_href):
-        img_src = self.get_image(manga_href)
+        try:
+            img_src = self.get_image(manga_href)
+        except AttributeError:
+            img_src = "https://www.google.com/imgres?imgurl=https%3A%2F%2Fsoftsmart.co.za%2Fwp-content%2Fuploads%2F2018%2F06%2Fimage-not-found-1038x576.jpg&imgrefurl=https%3A%2F%2Fsoftsmart.co.za%2F2018%2F06%2F09%2Ffacebook-share-button-missing-image%2F&tbnid=2jFbS8YPMzN1RM&vet=12ahUKEwj-0IDMhtLqAhXuQDABHeNEBEcQMygAegUIARDBAQ..i&docid=hgexmzgF0JveAM&w=1038&h=576&q=missing%20image&ved=2ahUKEwj-0IDMhtLqAhXuQDABHeNEBEcQMygAegUIARDBAQ"
+            logger.error("Dex database was lagging and didn't return an image")
+
         if not Manga.objects.filter(name=title, reader=self.user).exists():
             digit_list = [int(s) for s in re.findall(r'\b\d+\b', manga_href)]
             manga_id = digit_list[0]
@@ -129,7 +134,9 @@ class Scraper:
 
     # Get all updated chapters
     def scrape_following(self):
-        num = 3
+        num = 10
+        today = datetime.datetime.today()
+        margin = datetime.timedelta(days=1)
 
         previous_title = None
         previous_image = None
@@ -180,9 +187,13 @@ class Scraper:
                     # Get published date and time
                     date = manga.find('div', {"class": self.date_regex})
                     cleaned_date = date.get("title")[:-4]
-                    publish_date = datetime.strptime(cleaned_date, '%Y-%m-%d %H:%M:%S')
-                    publish_date = timezone.make_aware(publish_date)
+                    publish_date = datetime.datetime.strptime(cleaned_date, '%Y-%m-%d %H:%M:%S')
 
+                    if publish_date < today - margin:
+                        logger.error("Too old")
+                        return
+
+                    publish_date = timezone.make_aware(publish_date)
                     # Store info in DB
                     self.set_class(title, manga_href)
 
@@ -226,7 +237,7 @@ class Scraper:
                 # Get published date and time
                 date = manga.find('div', {"class": self.date_regex})
                 cleaned_date = date.get("title")[:-4]
-                publish_date = datetime.strptime(cleaned_date, '%Y-%m-%d %H:%M:%S')
+                publish_date = datetime.datetime.strptime(cleaned_date, '%Y-%m-%d %H:%M:%S')
                 publish_date = timezone.make_aware(publish_date)
 
                 if not Chapters.objects.filter(chap_id=chap_id, manga__reader=self.user).exists():
@@ -250,8 +261,6 @@ class Scraper:
         new_search.save()
 
     def scrape_search_page(self, mangas):
-        # with multiprocessing.Pool() as p:
-        #     p.map(self.collect_data, mangas)
         for manga in mangas:
             self.collect_data(manga)
 

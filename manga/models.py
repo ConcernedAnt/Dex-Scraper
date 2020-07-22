@@ -4,15 +4,15 @@ from django.db import models
 from django.core.files import File
 from django.contrib.auth.models import User
 from os import path
+from fernet_fields import EncryptedCharField
 import logging
-
 logger = logging.getLogger(__name__)
 
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     DexUsername = models.CharField(max_length=255)
-    DexPassword = models.CharField(max_length=255)
+    DexPassword = EncryptedCharField(max_length=255)
 
 
 # Represents a Manga

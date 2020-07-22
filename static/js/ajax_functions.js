@@ -1,52 +1,3 @@
-//Ajax functions
-//Modify the read status of the chapter on clicking checkbox.
-$('input.read_class').on('click', function(e) {
-    e.stopPropagation();
-    $.ajax({
-        type: 'POST',
-        url: '/update_read',
-        data:{
-            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
-            pk: $(this).attr('data-id')
-        },
-        success: function(){
-        }
-    });
-});
-//Update read status on clicking link and reload the page once done
-$('a.read_class').on('click', function(e) {
-    var pk = $(this).attr('data-id');
-    $.ajax({
-        type: 'POST',
-        url: '/update_read',
-        data:{
-            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
-            pk: pk
-        },
-        success: function(){
-            location.reload(true);
-        }
-    });
-});
-
-$('button[name= "addcoll"]').on('click', function(e) {
-    var pk = $(this).attr('data-id');
-    $.ajax({
-        type: 'POST',
-        url: '/add_to_coll',
-        data:{
-            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
-            pk: pk
-        },
-        dataType: "json",
-        success: function(data){
-            alert("Added to collection");
-            $("#"+pk).replaceWith(function(){
-                return "<button type='button' class='btn btn-secondary' disabled>Already In Collection</button>";
-            });
-        }
-    });
-});
 $(document).ready(function(){
     // Functions for Edit mode
     $('button[name= "editbtn"]').on('click', function(e) {
@@ -82,6 +33,7 @@ $(document).ready(function(){
             });
         }
     });
+//    Delete the selected items from the collection
     $('button[name= "deletebtn"]').on('click', function(e) {
         var selected_boxes = [];
         $.each($("input.btn_chk:checked"), function(){
@@ -106,9 +58,65 @@ $(document).ready(function(){
         }
     });
 
+    // Change the color of the border in edit mode
     $('.btn_chk').on('click', function(e){
         $(this).parent().toggleClass("selected");
         $(this).parent().toggleClass("collection");
+    });
+    $("#checkAll").click(function(){
+        console.log("Check all");
+        $("input[type=checkbox]").trigger("click");
+        $("input[type=checkbox]").prop('checked', true);
+    });
+    //Ajax functions
+    //Modify the read status of the chapter on clicking checkbox.
+    $('input.read_class').on('click', function(e) {
+        console.log("Mark read");
+        e.stopPropagation();
+        $.ajax({
+            type: 'POST',
+            url: '/update_read',
+            data:{
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                pk: $(this).attr('data-id')
+            },
+            success: function(){
+            }
+        });
+    });
+    //Update read status on clicking link and reload the page once done
+    $('a.read_class').on('click', function(e) {
+        var pk = $(this).attr('data-id');
+        $.ajax({
+            type: 'POST',
+            url: '/update_read',
+            data:{
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                pk: pk
+            },
+            success: function(){
+                location.reload(true);
+            }
+        });
+    });
+//    Add entries from search to the collection and change the button on success
+    $('button[name= "addcoll"]').on('click', function(e) {
+        var pk = $(this).attr('data-id');
+        $.ajax({
+            type: 'POST',
+            url: '/add_to_coll',
+            data:{
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                pk: pk
+            },
+            dataType: "json",
+            success: function(data){
+                alert("Added to collection");
+                $("#"+pk).replaceWith(function(){
+                    return "<button type='button' class='btn btn-secondary' disabled>Already In Collection</button>";
+                });
+            }
+        });
     });
 });
 
