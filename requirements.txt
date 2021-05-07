@@ -5,7 +5,7 @@ cffi==1.14.0
 chardet==3.0.4
 click==7.1.2
 cryptography==3.0
-Django==3.0.7
+Django==3.0.14
 django-crispy-forms==1.9.1
 django-fernet-fields==0.6
 idna==2.9
