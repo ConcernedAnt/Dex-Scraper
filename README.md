@@ -1,2 +1,2 @@
 # Dex-Scraper
-My first django project. A content aggregator that scrapes the mangadex website.
+With the introduction of Mangadex v5, this project is depreciated.
